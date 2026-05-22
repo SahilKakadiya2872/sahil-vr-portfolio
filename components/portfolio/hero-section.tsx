@@ -146,7 +146,7 @@ export function HeroSection() {
               Get in Touch
             </Link>
             <Link
-              href="https://drive.google.com/file/d/1ITOqsRtbPj0ad8_5qTDuvbTDtyOTGbzL/view?usp=sharing" target="_blank"
+              href="https://drive.google.com/file/d/1f51Rau4PI9iRizVq10aUAz2qjChNLjHC/view?usp=sharing" target="_blank"
               className="relative bg-gradient-to-r from-primary via-secondary to-accent text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-all duration-300 glow-multi flex items-center gap-2 font-medium"
             >
               <Download className="w-4 h-4" />

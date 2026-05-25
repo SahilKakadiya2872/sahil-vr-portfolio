@@ -953,39 +953,37 @@ function DesignSection() {
 
   const getIndex = (offset: number) => (current + offset + total) % total
 
-  // Slide variants — direction-aware
   const slideVariants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 300 : -300,
       opacity: 0,
-      scale: 0.92,
+      scale: 0.94,
     }),
     center: {
       x: 0,
       opacity: 1,
       scale: 1,
       transition: {
-        x: { type: "spring", stiffness: 280, damping: 30 },
-        opacity: { duration: 0.25 },
-        scale: { duration: 0.35 },
+        x: { type: "spring", stiffness: 90, damping: 22 },
+        opacity: { duration: 0.45 },
+        scale: { duration: 0.5 },
       },
     },
     exit: (dir: number) => ({
       x: dir > 0 ? -300 : 300,
       opacity: 0,
-      scale: 0.92,
+      scale: 0.94,
       transition: {
-        x: { type: "spring", stiffness: 280, damping: 30 },
-        opacity: { duration: 0.2 },
+        x: { type: "spring", stiffness: 90, damping: 22 },
+        opacity: { duration: 0.35 },
       },
     }),
   }
 
   return (
     <section id="design" className="py-32 px-6 relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/8 rounded-full blur-[180px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[180px]" />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
@@ -996,30 +994,28 @@ function DesignSection() {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          {/* ── Swiper row ── */}
           <div className="flex items-center justify-center gap-4 md:gap-8">
 
             {/* Left arrow */}
             <motion.button
               onClick={() => paginate(-1)}
-              whileHover={{ scale: 1.12, x: -3 }}
+              whileHover={{ scale: 1.1, x: -3 }}
               whileTap={{ scale: 0.92 }}
-              className="flex-shrink-0 w-14 h-14 glass-card rounded-2xl border border-border/30 hover:border-primary/60 hover:neon-glow flex items-center justify-center transition-all duration-300 z-10"
+              className="flex-shrink-0 w-14 h-14 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300 z-10"
             >
               <ChevronDown className="w-6 h-6 text-foreground rotate-90" />
             </motion.button>
 
-            {/* Cards */}
             <div className="flex items-center justify-center gap-4 md:gap-6">
 
               {/* Left side card */}
               <motion.div
                 key={`left-${getIndex(-1)}`}
-                animate={{ scale: 0.85, opacity: 0.4, x: 0 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                animate={{ scale: 0.85, opacity: 0.4 }}
+                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                 className="hidden lg:block flex-shrink-0 w-[280px] cursor-pointer select-none"
                 onClick={() => paginate(-1)}
-                whileHover={{ opacity: 0.65, scale: 0.88 }}
+                whileHover={{ opacity: 0.6, scale: 0.87 }}
               >
                 <div className="glass-card rounded-2xl overflow-hidden border border-border/20">
                   <div className="aspect-[16/10] overflow-hidden">
@@ -1037,24 +1033,21 @@ function DesignSection() {
                 </div>
               </motion.div>
 
-              {/* ── CENTER CARD — featured ── */}
+              {/* Center card */}
               <div
                 className="flex-shrink-0 w-[340px] md:w-[560px] lg:w-[680px] relative"
                 style={{ minHeight: "420px" }}
               >
-                {/* Dynamic glow */}
+                {/* Subtle glow */}
                 <motion.div
                   key={`glow-${current}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                  className={`absolute -inset-4 bg-gradient-to-r ${screens[current].gradient} rounded-[2rem] blur-3xl opacity-35`}
+                  transition={{ duration: 1.2 }}
+                  className={`absolute -inset-4 bg-gradient-to-r ${screens[current].gradient} rounded-[2rem] blur-2xl opacity-10`}
                 />
 
-                {/* Card shell */}
-                <div className="relative glass-card rounded-3xl overflow-hidden border border-primary/30 shadow-2xl">
-
-                  {/* Image with directional slide */}
+                <div className="relative glass-card rounded-3xl overflow-hidden border border-primary/25 shadow-2xl">
                   <div className="aspect-[16/10] overflow-hidden relative">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
                       <motion.img
@@ -1072,17 +1065,14 @@ function DesignSection() {
                       />
                     </AnimatePresence>
 
-                    {/* Gradient overlays */}
                     <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-card via-card/50 to-transparent pointer-events-none" />
                     <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-card/60 to-transparent pointer-events-none" />
 
-                    {/* Click to expand hint */}
                     <div className="absolute top-4 right-4 px-3 py-1.5 glass rounded-xl text-xs text-muted-foreground pointer-events-none">
                       Click to expand
                     </div>
                   </div>
 
-                  {/* Info bar */}
                   <div className="px-7 py-5 flex items-center justify-between">
                     <AnimatePresence mode="wait">
                       <motion.div
@@ -1090,7 +1080,7 @@ function DesignSection() {
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
-                        transition={{ duration: 0.25 }}
+                        transition={{ duration: 0.35 }}
                       >
                         <p className="text-lg font-bold text-foreground">{screens[current].label}</p>
                         <p className="text-sm text-muted-foreground">{screens[current].desc}</p>
@@ -1101,6 +1091,7 @@ function DesignSection() {
                       key={`counter-${current}`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.35 }}
                       className={`px-4 py-2 rounded-xl text-sm font-bold bg-gradient-to-r ${screens[current].gradient} text-white flex-shrink-0 ml-4`}
                     >
                       {current + 1} / {total}
@@ -1112,11 +1103,11 @@ function DesignSection() {
               {/* Right side card */}
               <motion.div
                 key={`right-${getIndex(1)}`}
-                animate={{ scale: 0.85, opacity: 0.4, x: 0 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                animate={{ scale: 0.85, opacity: 0.4 }}
+                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                 className="hidden lg:block flex-shrink-0 w-[280px] cursor-pointer select-none"
                 onClick={() => paginate(1)}
-                whileHover={{ opacity: 0.65, scale: 0.88 }}
+                whileHover={{ opacity: 0.6, scale: 0.87 }}
               >
                 <div className="glass-card rounded-2xl overflow-hidden border border-border/20">
                   <div className="aspect-[16/10] overflow-hidden">
@@ -1138,15 +1129,15 @@ function DesignSection() {
             {/* Right arrow */}
             <motion.button
               onClick={() => paginate(1)}
-              whileHover={{ scale: 1.12, x: 3 }}
+              whileHover={{ scale: 1.1, x: 3 }}
               whileTap={{ scale: 0.92 }}
-              className="flex-shrink-0 w-14 h-14 glass-card rounded-2xl border border-border/30 hover:border-primary/60 hover:neon-glow flex items-center justify-center transition-all duration-300 z-10"
+              className="flex-shrink-0 w-14 h-14 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300 z-10"
             >
               <ChevronDown className="w-6 h-6 text-foreground -rotate-90" />
             </motion.button>
           </div>
 
-          {/* Dot indicators */}
+          {/* Dots */}
           <div className="flex items-center justify-center gap-2.5 mt-8">
             {screens.map((_, i) => (
               <motion.button
@@ -1154,9 +1145,10 @@ function DesignSection() {
                 onClick={() => goTo(i)}
                 animate={{
                   width: i === current ? 32 : 8,
-                  backgroundColor: i === current ? "oklch(0.72 0.22 260)" : "oklch(0.4 0 0)",
+                  backgroundColor:
+                    i === current ? "oklch(0.72 0.22 260)" : "oklch(0.35 0 0)",
                 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.4 }}
                 className="h-2 rounded-full"
               />
             ))}
@@ -1204,6 +1196,7 @@ function DesignSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/92 backdrop-blur-2xl"
             onClick={() => setLightboxSrc(null)}
           >
@@ -1211,8 +1204,8 @@ function DesignSection() {
               initial={{ scale: 0.88, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.88, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 28 }}
-              className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/40 neon-glow"
+              transition={{ type: "spring", stiffness: 200, damping: 26 }}
+              className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
               onClick={(e) => e.stopPropagation()}
             >
               <img

@@ -22,6 +22,7 @@ import {
   Zap,
   Star,
   Award,
+  ImageIcon,
   BadgeCheck
 } from "lucide-react"
 
@@ -145,7 +146,7 @@ function Navigation() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
       
-      const sections = ["about", "skills", "projects", "experience", "education", "contact"]
+      const sections = ["about", "skills", "projects", "design", "experience", "education", "contact"]
       for (const section of sections) {
         const element = document.getElementById(section)
         if (element) {
@@ -165,6 +166,7 @@ function Navigation() {
     { name: "About", href: "#about" },
     { name: "Skills", href: "#skills" },
     { name: "Projects", href: "#projects" },
+    { name: "Design", href: "#design" },
     { name: "Experience", href: "#experience" },
     { name: "Education", href: "#education" },
     { name: "Certifications", href: "#certifications" },
@@ -897,6 +899,217 @@ function ProjectsSection() {
   )
 }
 
+function DesignSection() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: "-100px" })
+  const [selectedImage, setSelectedImage] = useState<number | null>(null)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+
+  // ── Project metadata ──────────────────────────────────────────────────────
+  const project = {
+    title: "Free Fire Diamonds",
+    subtitle: "Mobile App UI Design",
+    description:
+      "Designed the complete UI system for a gaming companion app — home screen, navigation, character cards, weapon stats, vehicle catalogue, reward flow, app icon, and Play Store marketing banner. Built with a consistent dark theme, gradient accent system, and interactive component library across 9+ screens.",
+    tools: ["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"],
+    gradient: "from-primary via-accent to-neon-cyan",
+  }
+
+  // ── Screens ───────────────────────────────────────────────────────────────
+  // Upload your images to /public/design/ with these exact filenames
+  const screens = [
+    { src: "/design/screen-home.jpg",       label: "Home Screen",        span: "md:col-span-2" },
+    { src: "/design/screen-characters.jpg", label: "Characters",          span: "" },
+    { src: "/design/screen-weapons.jpg",    label: "Weapon Stats",        span: "" },
+    { src: "/design/screen-vehicles.jpg",   label: "Vehicles",            span: "" },
+    { src: "/design/screen-rewards.jpg",    label: "Reward Flow",         span: "" },
+    { src: "/design/screen-chars2.jpg",     label: "Character Carousel",  span: "" },
+    { src: "/design/screen-exit.jpg",       label: "Exit Screen UI",      span: "" },
+    { src: "/design/banner.jpg",            label: "Play Store Banner",   span: "md:col-span-2" },
+  ]
+
+  return (
+    <section id="design" className="py-32 px-6 relative overflow-hidden">
+
+      {/* Background — matches Skills/Projects pattern */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
+
+        {/* Section Header — identical usage to rest of page */}
+        <SectionHeader label="Design Work" title="UI/UX" highlight="Portfolio" />
+
+        {/* Project intro card */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="group relative mb-16"
+        >
+          <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-neon-cyan rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-all duration-500" />
+          <div className="relative glass-card rounded-3xl p-8 md:p-10 border border-border/30 group-hover:border-primary/40 transition-all duration-500">
+            <div className="flex flex-col md:flex-row md:items-start gap-8">
+
+              {/* Icon */}
+              <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center neon-glow">
+                <Palette className="w-10 h-10 text-white" />
+              </div>
+
+              {/* Text */}
+              <div className="flex-1">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">
+                      {project.title}
+                    </h3>
+                    <p className="text-lg text-primary font-semibold mt-1">{project.subtitle}</p>
+                  </div>
+                  <span className="flex items-center gap-2 text-sm text-muted-foreground px-4 py-1.5 glass rounded-full w-fit">
+                    <Star className="w-3.5 h-3.5 text-primary" />
+                    Client Project
+                  </span>
+                </div>
+
+                <p className="text-muted-foreground mb-6 leading-relaxed">{project.description}</p>
+
+                {/* Tool tags — same style as project tags */}
+                <div className="flex flex-wrap gap-2">
+                  {project.tools.map((tool) => (
+                    <span
+                      key={tool}
+                      className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Screen gallery */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {screens.map((screen, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 60 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                delay: index * 0.1,
+                duration: 0.7,
+                ease: [0.25, 0.1, 0.25, 1],
+              }}
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
+              onClick={() => setSelectedImage(index)}
+              className={`group relative cursor-zoom-in ${screen.span}`}
+            >
+              {/* Hover glow — matches ProjectsSection */}
+              <motion.div
+                className="absolute -inset-2 bg-gradient-to-r from-primary via-accent to-neon-cyan rounded-3xl blur-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: hoveredCard === index ? 0.25 : 0 }}
+                transition={{ duration: 0.4 }}
+              />
+
+              <div className="relative glass-card rounded-3xl overflow-hidden border border-border/30 group-hover:border-primary/40 transition-all duration-500">
+                {/* Image */}
+                <div className="relative aspect-video overflow-hidden">
+                  <motion.img
+                    src={screen.src}
+                    alt={screen.label}
+                    className="w-full h-full object-cover"
+                    animate={{ scale: hoveredCard === index ? 1.05 : 1 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+
+                  {/* Gradient overlay — bottom fade same as projects */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
+
+                  {/* Hover overlay */}
+                  <motion.div
+                    className="absolute inset-0 bg-background/60 flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: hoveredCard === index ? 1 : 0.8,
+                        opacity: hoveredCard === index ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3, delay: 0.05 }}
+                      className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold flex items-center gap-2 neon-glow"
+                    >
+                      <ImageIcon className="w-4 h-4" />
+                      View Full
+                    </motion.div>
+                  </motion.div>
+                </div>
+
+                {/* Label */}
+                <div className="px-5 py-4">
+                  <motion.p
+                    className="text-sm font-semibold text-foreground/80 group-hover:text-primary transition-colors duration-300"
+                    animate={{ x: hoveredCard === index ? 4 : 0 }}
+                  >
+                    {screen.label}
+                  </motion.p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox modal — same glass-card + backdrop pattern */}
+      <AnimatePresence>
+        {selectedImage !== null && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/90 backdrop-blur-xl"
+            onClick={() => setSelectedImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+              className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={screens[selectedImage].src}
+                alt={screens[selectedImage].label}
+                className="w-full h-auto max-h-[80vh] object-contain"
+              />
+              <div className="absolute bottom-0 inset-x-0 px-6 py-4 bg-gradient-to-t from-card to-transparent flex items-center justify-between">
+                <p className="text-sm font-semibold text-primary">
+                  {screens[selectedImage].label}
+                </p>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 glass rounded-lg"
+                >
+                  Close ✕
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  )
+}
+
 // Experience Section - Timeline
 function ExperienceSection() {
   const ref = useRef(null)
@@ -1371,6 +1584,8 @@ export default function Portfolio() {
       <SkillsSection />
       <div className="section-divider" />
       <ProjectsSection />
+      <div className="section-divider" />
+      <DesignSection />
       <div className="section-divider" />
       <ExperienceSection />
       <div className="section-divider" />

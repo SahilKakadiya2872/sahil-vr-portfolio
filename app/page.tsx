@@ -23,6 +23,7 @@ import {
   Star,
   Award,
   ImageIcon,
+  Maximize2,
   BadgeCheck
 } from "lucide-react"
 
@@ -931,9 +932,9 @@ function DesignSection() {
       gradient: "from-neon-purple to-accent",
     },
     {
-      src: "/design/screen-exit.jpg",
-      label: "Exit Screen",
-      desc: "Goodbye interaction",
+      src: "/design/screen-characters.jpg",
+      label: "Free Characters",
+      desc: "Characters for free",
       gradient: "from-accent to-primary",
     },
   ]
@@ -1068,8 +1069,8 @@ function DesignSection() {
                     <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-card via-card/50 to-transparent pointer-events-none" />
                     <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-card/60 to-transparent pointer-events-none" />
 
-                    <div className="absolute top-4 right-4 px-3 py-1.5 glass rounded-xl text-xs text-muted-foreground pointer-events-none">
-                      Click to expand
+                    <div className="absolute top-4 right-4 p-2.5 glass rounded-xl pointer-events-none">
+                        <Maximize2 className="w-4 h-4 text-muted-foreground" />
                     </div>
                   </div>
 
@@ -1190,39 +1191,74 @@ function DesignSection() {
       </div>
 
       {/* Lightbox */}
-      <AnimatePresence>
-        {lightboxSrc && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/92 backdrop-blur-2xl"
-            onClick={() => setLightboxSrc(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.88, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.88, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 26 }}
-              className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={lightboxSrc}
-                alt="Full view"
-                className="w-full h-auto max-h-[88vh] object-contain"
-              />
-              <button
-                onClick={() => setLightboxSrc(null)}
-                className="absolute top-4 right-4 text-xs text-muted-foreground hover:text-foreground px-4 py-2 glass rounded-xl border border-border/30 transition-colors"
-              >
-                Close ✕
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+<AnimatePresence>
+  {lightboxSrc && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/92 backdrop-blur-2xl"
+      onClick={() => setLightboxSrc(null)}
+    >
+      <motion.div
+        initial={{ scale: 0.88, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.88, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 26 }}
+        className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={lightboxSrc}
+          alt="Full view"
+          className="w-full h-auto max-h-[88vh] object-contain"
+        />
+
+        {/* Close */}
+        <button
+          onClick={() => setLightboxSrc(null)}
+          className="absolute top-4 right-4 text-xs text-muted-foreground hover:text-foreground px-4 py-2 glass rounded-xl border border-border/30 transition-colors"
+        >
+          Close ✕
+        </button>
+
+        {/* Prev */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => {
+            const idx = screens.findIndex(s => s.src === lightboxSrc)
+            const prev = (idx - 1 + screens.length) % screens.length
+            setLightboxSrc(screens[prev].src)
+          }}
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300"
+        >
+          <ChevronDown className="w-5 h-5 text-foreground rotate-90" />
+        </motion.button>
+
+        {/* Next */}
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => {
+            const idx = screens.findIndex(s => s.src === lightboxSrc)
+            const next = (idx + 1) % screens.length
+            setLightboxSrc(screens[next].src)
+          }}
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300"
+        >
+          <ChevronDown className="w-5 h-5 text-foreground -rotate-90" />
+        </motion.button>
+
+        {/* Image counter */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 glass rounded-xl text-xs text-muted-foreground">
+          {screens.findIndex(s => s.src === lightboxSrc) + 1} / {screens.length}
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
     </section>
   )
 }

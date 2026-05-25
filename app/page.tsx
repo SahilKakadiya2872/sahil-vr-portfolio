@@ -1044,7 +1044,7 @@ function DesignSection() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 1.2 }}
-                  className={`absolute -inset-4 bg-gradient-to-r ${screens[current].gradient} rounded-[2rem] blur-2xl opacity-10`}
+                  className="absolute -inset-4 bg-primary/20 rounded-[2rem] blur-2xl opacity-100"
                 />
 
                 <div className="relative glass-card rounded-3xl overflow-hidden border border-primary/25 shadow-2xl">

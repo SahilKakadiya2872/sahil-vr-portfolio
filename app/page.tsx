@@ -902,210 +902,144 @@ function ProjectsSection() {
 function DesignSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [selectedImage, setSelectedImage] = useState<number | null>(null)
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [hoveredProject, setHoveredProject] = useState<number | null>(null)
+  const [currentSlide, setCurrentSlide] = useState(0)
 
-  // ── Project metadata ──────────────────────────────────────────────────────
-  const project = {
-    title: "Free Fire Diamonds",
-    subtitle: "Mobile App UI Design",
-    description:
-      "Designed the complete UI system for a gaming companion app — home screen, navigation, character cards, weapon stats, vehicle catalogue, reward flow, app icon, and Play Store marketing banner. Built with a consistent dark theme, gradient accent system, and interactive component library across 9+ screens.",
-    tools: ["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"],
-    gradient: "from-primary via-accent to-neon-cyan",
-  }
-
-  // ── Screens ───────────────────────────────────────────────────────────────
-  // Upload your images to /public/design/ with these exact filenames
   const screens = [
-    { src: "/design/screen-home.jpg",       label: "Home Screen",        span: "md:col-span-2" },
-    { src: "/design/screen-characters.jpg", label: "Characters",          span: "" },
-    { src: "/design/screen-weapons.jpg",    label: "Weapon Stats",        span: "" },
-    { src: "/design/screen-vehicles.jpg",   label: "Vehicles",            span: "" },
-    { src: "/design/screen-rewards.jpg",    label: "Reward Flow",         span: "" },
-    { src: "/design/screen-chars2.jpg",     label: "Character Carousel",  span: "" },
-    { src: "/design/screen-exit.jpg",       label: "Exit Screen UI",      span: "" },
-    { src: "/design/banner.jpg",            label: "Play Store Banner",   span: "md:col-span-2" },
+    { src: "/design/screen-home.jpg",        label: "Home Screen"        },
+    { src: "/design/screen-characters.jpg",  label: "Characters"         },
+    { src: "/design/screen-weapons.jpg",     label: "Weapon Stats"       },
+    { src: "/design/screen-vehicles.jpg",    label: "Vehicles"           },
+    { src: "/design/screen-rewards.jpg",     label: "Reward Flow"        },
+    { src: "/design/screen-chars2.jpg",      label: "Character Carousel" },
+    { src: "/design/screen-exit.jpg",        label: "Exit Screen"        },
+    { src: "/design/banner.jpg",             label: "Play Store Banner"  },
+  ]
+
+  const projects = [
+    {
+      title: "Free Fire Diamonds — Mobile App UI",
+      description:
+        "Designed the complete UI system for a gaming companion app — home screen, navigation, character cards, weapon stats, vehicle catalogue, reward flow, and Play Store marketing banner. Built with a consistent dark theme and gradient accent system across 8+ screens.",
+      tags: ["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"],
+      gradient: "from-primary via-accent to-neon-cyan",
+      screens,
+    },
   ]
 
   return (
     <section id="design" className="py-32 px-6 relative overflow-hidden">
-
-      {/* Background — matches Skills/Projects pattern */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
-      </div>
-
       <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
 
-        {/* Section Header — identical usage to rest of page */}
         <SectionHeader label="Design Work" title="UI/UX" highlight="Portfolio" />
 
-        {/* Project intro card */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="group relative mb-16"
-        >
-          <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-neon-cyan rounded-3xl blur-xl opacity-0 group-hover:opacity-20 transition-all duration-500" />
-          <div className="relative glass-card rounded-3xl p-8 md:p-10 border border-border/30 group-hover:border-primary/40 transition-all duration-500">
-            <div className="flex flex-col md:flex-row md:items-start gap-8">
-
-              {/* Icon */}
-              <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center neon-glow">
-                <Palette className="w-10 h-10 text-white" />
-              </div>
-
-              {/* Text */}
-              <div className="flex-1">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-lg text-primary font-semibold mt-1">{project.subtitle}</p>
-                  </div>
-                  <span className="flex items-center gap-2 text-sm text-muted-foreground px-4 py-1.5 glass rounded-full w-fit">
-                    <Star className="w-3.5 h-3.5 text-primary" />
-                    Client Project
-                  </span>
-                </div>
-
-                <p className="text-muted-foreground mb-6 leading-relaxed">{project.description}</p>
-
-                {/* Tool tags — same style as project tags */}
-                <div className="flex flex-wrap gap-2">
-                  {project.tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Screen gallery */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {screens.map((screen, index) => (
+        <div className="grid md:grid-cols-1 gap-8">
+          {projects.map((project, index) => (
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 60 }}
+              key={project.title}
+              initial={{ opacity: 0, y: 80 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                delay: index * 0.1,
-                duration: 0.7,
-                ease: [0.25, 0.1, 0.25, 1],
-              }}
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => setSelectedImage(index)}
-              className={`group relative cursor-zoom-in ${screen.span}`}
+              transition={{ delay: index * 0.15, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+              onMouseEnter={() => setHoveredProject(index)}
+              onMouseLeave={() => setHoveredProject(null)}
+              className="group relative"
             >
-              {/* Hover glow — matches ProjectsSection */}
+              {/* Glow — identical to ProjectsSection */}
               <motion.div
-                className="absolute -inset-2 bg-gradient-to-r from-primary via-accent to-neon-cyan rounded-3xl blur-2xl"
+                className={`absolute -inset-2 bg-gradient-to-r ${project.gradient} rounded-3xl blur-2xl`}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: hoveredCard === index ? 0.25 : 0 }}
+                animate={{ opacity: hoveredProject === index ? 0.3 : 0 }}
                 transition={{ duration: 0.4 }}
               />
 
               <div className="relative glass-card rounded-3xl overflow-hidden border border-border/30 group-hover:border-primary/40 transition-all duration-500">
-                {/* Image */}
-                <div className="relative aspect-video overflow-hidden">
-                  <motion.img
-                    src={screen.src}
-                    alt={screen.label}
-                    className="w-full h-full object-cover"
-                    animate={{ scale: hoveredCard === index ? 1.05 : 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
 
-                  {/* Gradient overlay — bottom fade same as projects */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 via-transparent to-transparent" />
+                {/* Image carousel — same aspect ratio as the wide TURTLE card */}
+                <div className="relative aspect-[16/7] overflow-hidden">
 
-                  {/* Hover overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-background/60 flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
+                  {/* Slides */}
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentSlide}
+                      src={project.screens[currentSlide].src}
+                      alt={project.screens[currentSlide].label}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      initial={{ opacity: 0, scale: 1.04 }}
+                      animate={{ scale: hoveredProject === index ? 1.05 : 1, opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                  </AnimatePresence>
+
+                  {/* Gradient overlays — same as projects */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-10`} />
+                  <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-card to-transparent" />
+
+                  {/* Slide indicators */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                    {project.screens.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentSlide(i)}
+                        className={`rounded-full transition-all duration-300 ${
+                          i === currentSlide
+                            ? "w-6 h-2 bg-primary"
+                            : "w-2 h-2 bg-white/30 hover:bg-white/60"
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Prev / Next arrows */}
+                  <button
+                    onClick={() => setCurrentSlide((p) => (p - 1 + screens.length) % screens.length)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 p-2 glass-card rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-300 z-10"
                   >
-                    <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{
-                        scale: hoveredCard === index ? 1 : 0.8,
-                        opacity: hoveredCard === index ? 1 : 0,
-                      }}
-                      transition={{ duration: 0.3, delay: 0.05 }}
-                      className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold flex items-center gap-2 neon-glow"
-                    >
-                      <ImageIcon className="w-4 h-4" />
-                      View Full
-                    </motion.div>
-                  </motion.div>
+                    <ChevronDown className="w-4 h-4 text-foreground rotate-90" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentSlide((p) => (p + 1) % screens.length)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-2 glass-card rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-300 z-10"
+                  >
+                    <ChevronDown className="w-4 h-4 text-foreground -rotate-90" />
+                  </button>
+
+                  {/* Screen label */}
+                  <div className="absolute top-4 right-4 px-3 py-1.5 glass rounded-lg z-10">
+                    <span className="text-xs font-medium text-foreground/80">
+                      {project.screens[currentSlide].label}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Label */}
-                <div className="px-5 py-4">
-                  <motion.p
-                    className="text-sm font-semibold text-foreground/80 group-hover:text-primary transition-colors duration-300"
-                    animate={{ x: hoveredCard === index ? 4 : 0 }}
+                {/* Info — identical structure to ProjectsSection */}
+                <div className="p-8">
+                  <motion.h3
+                    className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300"
+                    animate={{ x: hoveredProject === index ? 5 : 0 }}
                   >
-                    {screen.label}
-                  </motion.p>
+                    {project.title}
+                  </motion.h3>
+                  <p className="text-muted-foreground mb-6 line-clamp-2 leading-relaxed">
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-
-      {/* Lightbox modal — same glass-card + backdrop pattern */}
-      <AnimatePresence>
-        {selectedImage !== null && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/90 backdrop-blur-xl"
-            onClick={() => setSelectedImage(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative max-w-5xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <img
-                src={screens[selectedImage].src}
-                alt={screens[selectedImage].label}
-                className="w-full h-auto max-h-[80vh] object-contain"
-              />
-              <div className="absolute bottom-0 inset-x-0 px-6 py-4 bg-gradient-to-t from-card to-transparent flex items-center justify-between">
-                <p className="text-sm font-semibold text-primary">
-                  {screens[selectedImage].label}
-                </p>
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 glass rounded-lg"
-                >
-                  Close ✕
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   )
 }

@@ -896,120 +896,206 @@ function ProjectsSection() {
 function DesignSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [current, setCurrent] = useState(0)
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
-  const cards = [
+  const screens = [
     {
       src: "/design/screen-home.jpg",
       label: "Home Screen",
-      desc: "Main navigation with gradient wave, character visuals, and 5 category buttons.",
-      gradient: "from-primary via-accent to-neon-cyan",
+      desc: "Main navigation hub",
+      gradient: "from-primary to-accent",
     },
     {
       src: "/design/screen-weapons.jpg",
       label: "Weapon Stats",
-      desc: "Detailed weapon view with gradient circle, stat bars, and attachables grid.",
-      gradient: "from-accent via-neon-purple to-primary",
+      desc: "Detail view with stats",
+      gradient: "from-accent to-neon-cyan",
     },
     {
       src: "/design/screen-chars2.jpg",
       label: "Characters",
-      desc: "Interactive character carousel with profile cards and selection indicators.",
-      gradient: "from-neon-cyan via-primary to-accent",
+      desc: "Character carousel",
+      gradient: "from-neon-cyan to-primary",
+    },
+    {
+      src: "/design/screen-vehicles.jpg",
+      label: "Vehicles",
+      desc: "Vehicle catalogue",
+      gradient: "from-primary to-neon-purple",
+    },
+    {
+      src: "/design/screen-rewards.jpg",
+      label: "Rewards",
+      desc: "Diamond reward flow",
+      gradient: "from-neon-purple to-accent",
+    },
+    {
+      src: "/design/screen-exit.jpg",
+      label: "Exit Screen",
+      desc: "Goodbye interaction",
+      gradient: "from-accent to-primary",
     },
   ]
 
+  const total = screens.length
+  const prev = () => setCurrent((c) => (c - 1 + total) % total)
+  const next = () => setCurrent((c) => (c + 1) % total)
+
+  // Get index relative to current — wraps around
+  const getIndex = (offset: number) => (current + offset + total) % total
+
   return (
     <section id="design" className="py-32 px-6 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
+      {/* Background blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/10 rounded-full blur-[150px]" />
+      </div>
 
+      <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
         <SectionHeader label="Design Work" title="UI/UX" highlight="Portfolio" />
 
-        {/* 3-column grid — identical to ProjectsSection */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {cards.map((card, index) => (
-            <motion.div
-              key={card.label}
-              initial={{ opacity: 0, y: 80 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.15, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
-              onClick={() => setLightboxSrc(card.src)}
-              className="group relative cursor-zoom-in"
+        {/* ── Swiper ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="relative"
+        >
+          {/* Cards row */}
+          <div className="flex items-center justify-center gap-4 md:gap-6">
+
+            {/* Left arrow */}
+            <motion.button
+              onClick={prev}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex-shrink-0 w-12 h-12 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300 z-10"
             >
-              {/* Glow */}
+              <ChevronDown className="w-5 h-5 text-foreground rotate-90" />
+            </motion.button>
+
+            {/* 3 visible cards */}
+            <div className="flex items-center justify-center gap-3 md:gap-5 overflow-hidden">
+
+              {/* Left card */}
               <motion.div
-                className={`absolute -inset-2 bg-gradient-to-r ${card.gradient} rounded-3xl blur-2xl`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: hoveredCard === index ? 0.3 : 0 }}
-                transition={{ duration: 0.4 }}
+                key={`left-${getIndex(-1)}`}
+                animate={{ scale: 0.82, opacity: 0.45 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                className="hidden md:block flex-shrink-0 w-[220px] cursor-pointer"
+                onClick={prev}
+              >
+                <div className="glass-card rounded-2xl overflow-hidden border border-border/20">
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img
+                      src={screens[getIndex(-1)].src}
+                      alt={screens[getIndex(-1)].label}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Center card — featured */}
+              <motion.div
+                key={`center-${current}`}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                className="flex-shrink-0 w-[300px] md:w-[400px] relative cursor-zoom-in"
+                onClick={() => setLightboxSrc(screens[current].src)}
+              >
+                {/* Glow behind center card */}
+                <div className={`absolute -inset-3 bg-gradient-to-r ${screens[current].gradient} rounded-3xl blur-2xl opacity-40`} />
+
+                <div className="relative glass-card rounded-3xl overflow-hidden border border-primary/40 shadow-2xl">
+                  {/* Image */}
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <motion.img
+                      key={current}
+                      src={screens[current].src}
+                      alt={screens[current].label}
+                      initial={{ scale: 1.05, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+
+                  {/* Bottom info bar */}
+                  <div className="px-6 py-4 flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-foreground">{screens[current].label}</p>
+                      <p className="text-xs text-muted-foreground">{screens[current].desc}</p>
+                    </div>
+                    <div className={`px-3 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r ${screens[current].gradient} text-white`}>
+                      {current + 1} / {total}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right card */}
+              <motion.div
+                key={`right-${getIndex(1)}`}
+                animate={{ scale: 0.82, opacity: 0.45 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                className="hidden md:block flex-shrink-0 w-[220px] cursor-pointer"
+                onClick={next}
+              >
+                <div className="glass-card rounded-2xl overflow-hidden border border-border/20">
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img
+                      src={screens[getIndex(1)].src}
+                      alt={screens[getIndex(1)].label}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right arrow */}
+            <motion.button
+              onClick={next}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex-shrink-0 w-12 h-12 glass-card rounded-2xl border border-border/30 hover:border-primary/50 flex items-center justify-center transition-all duration-300 z-10"
+            >
+              <ChevronDown className="w-5 h-5 text-foreground -rotate-90" />
+            </motion.button>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center gap-2 mt-8">
+            {screens.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`rounded-full transition-all duration-300 ${
+                  i === current
+                    ? "w-8 h-2 bg-primary"
+                    : "w-2 h-2 bg-border hover:bg-primary/50"
+                }`}
               />
+            ))}
+          </div>
+        </motion.div>
 
-              <div className="relative glass-card rounded-3xl overflow-hidden border border-border/30 group-hover:border-primary/40 transition-all duration-500 h-full flex flex-col">
-                {/* Image */}
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <motion.img
-                    src={card.src}
-                    alt={card.label}
-                    className="absolute inset-0 w-full h-full object-cover object-top"
-                    animate={{ scale: hoveredCard === index ? 1.05 : 1 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-10`} />
-                  <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-card via-card/60 to-transparent" />
-                  <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-card to-transparent" />
-
-                  {/* Hover overlay */}
-                  <motion.div
-                    className="absolute inset-0 bg-background/60 flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.div
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{
-                        scale: hoveredCard === index ? 1 : 0.8,
-                        opacity: hoveredCard === index ? 1 : 0,
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold flex items-center gap-2 neon-glow text-sm"
-                    >
-                      <ImageIcon className="w-4 h-4" />
-                      View Full
-                    </motion.div>
-                  </motion.div>
-                </div>
-
-                {/* Info */}
-                <div className="p-6 flex flex-col flex-1">
-                  <motion.h3
-                    className="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300"
-                    animate={{ x: hoveredCard === index ? 4 : 0 }}
-                  >
-                    {card.label}
-                  </motion.h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">
-                    {card.desc}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Bottom row — tags + GitHub link */}
+        {/* Bottom row — tags + GitHub */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.6 }}
-          className="flex flex-col sm:flex-row items-center justify-between gap-6 px-2"
+          transition={{ delay: 0.5 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 mt-12 px-2"
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
             {["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"].map((tool) => (
-              <span key={tool} className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20">
+              <span
+                key={tool}
+                className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20"
+              >
                 {tool}
               </span>
             ))}
@@ -1051,10 +1137,14 @@ function DesignSection() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.85, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative max-w-4xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30"
+              className="relative max-w-4xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30 neon-glow"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src={lightboxSrc} alt="Full screen" className="w-full h-auto max-h-[85vh] object-contain" />
+              <img
+                src={lightboxSrc}
+                alt="Full view"
+                className="w-full h-auto max-h-[85vh] object-contain"
+              />
               <button
                 onClick={() => setLightboxSrc(null)}
                 className="absolute top-4 right-4 text-xs text-muted-foreground hover:text-foreground px-3 py-1.5 glass rounded-lg border border-border/30"
@@ -1068,6 +1158,7 @@ function DesignSection() {
     </section>
   )
 }
+
 
 // Experience Section - Timeline
 function ExperienceSection() {

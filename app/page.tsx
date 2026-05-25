@@ -896,230 +896,171 @@ function ProjectsSection() {
 function DesignSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: "-100px" })
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
-  const project = {
-    title: "Free Fire Diamonds",
-    subtitle: "Mobile App UI Design",
-    description:
-      "Complete UI system for a gaming companion app — home screen, navigation, character cards, weapon stats, vehicle catalogue, reward flow, and Play Store marketing banner. Built with a consistent dark theme and gradient accent system across 8+ screens.",
-    tools: ["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"],
-    github: "https://github.com/SahilKakadiya2872/UI-UX-Design-Portfolio",
-    gradient: "from-primary via-accent to-neon-cyan",
-  }
-
-  // 3 hero phones shown on right, rest in lightbox only
-  const phoneScreens = [
-    { src: "/design/screen-home.jpg",       label: "Home" },
-    { src: "/design/screen-weapons.jpg",    label: "Weapons" },
-    { src: "/design/screen-characters.jpg", label: "Characters" },
-  ]
-
-  // All screens for lightbox
-  const allScreens = [
-    "/design/screen-home.jpg",
-    "/design/screen-characters.jpg",
-    "/design/screen-weapons.jpg",
-    "/design/screen-vehicles.jpg",
-    "/design/screen-rewards.jpg",
-    "/design/screen-chars2.jpg",
-    "/design/screen-exit.jpg",
-    "/design/banner.jpg",
+  const cards = [
+    {
+      src: "/design/screen-home.jpg",
+      label: "Home Screen",
+      desc: "Main navigation with gradient wave, character visuals, and 5 category buttons.",
+      gradient: "from-primary via-accent to-neon-cyan",
+    },
+    {
+      src: "/design/screen-weapons.jpg",
+      label: "Weapon Stats",
+      desc: "Detailed weapon view with gradient circle, stat bars, and attachables grid.",
+      gradient: "from-accent via-neon-purple to-primary",
+    },
+    {
+      src: "/design/screen-chars2.jpg",
+      label: "Characters",
+      desc: "Interactive character carousel with profile cards and selection indicators.",
+      gradient: "from-neon-cyan via-primary to-accent",
+    },
   ]
 
   return (
     <section id="design" className="py-32 px-6 relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
-      </div>
-
       <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
+
         <SectionHeader label="Design Work" title="UI/UX" highlight="Portfolio" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="grid lg:grid-cols-2 gap-16 items-center"
-        >
-          {/* ── Left: Project info ── */}
-          <div className="order-2 lg:order-1">
-            {/* Tag */}
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 glass rounded-full text-primary text-sm font-semibold uppercase tracking-[0.15em] mb-6"
-            >
-              <Palette className="w-3.5 h-3.5" />
-              {project.subtitle}
-            </motion.span>
-
-            <motion.h3
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl font-bold mb-6 leading-tight"
-            >
-              {project.title}
-              <span className="text-primary neon-text">.</span>
-            </motion.h3>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.4 }}
-              className="text-muted-foreground text-lg leading-relaxed mb-8"
-            >
-              {project.description}
-            </motion.p>
-
-            {/* Tools */}
+        {/* 3-column grid — identical to ProjectsSection */}
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          {cards.map((card, index) => (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              key={card.label}
+              initial={{ opacity: 0, y: 80 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.5 }}
-              className="flex flex-wrap gap-2 mb-10"
+              transition={{ delay: index * 0.15, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
+              onClick={() => setLightboxSrc(card.src)}
+              className="group relative cursor-zoom-in"
             >
-              {project.tools.map((tool) => (
-                <span
-                  key={tool}
-                  className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20"
-                >
-                  {tool}
-                </span>
-              ))}
-            </motion.div>
+              {/* Glow */}
+              <motion.div
+                className={`absolute -inset-2 bg-gradient-to-r ${card.gradient} rounded-3xl blur-2xl`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: hoveredCard === index ? 0.3 : 0 }}
+                transition={{ duration: 0.4 }}
+              />
 
-            {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap gap-4"
-            >
-              <motion.a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="group relative px-8 py-4 rounded-2xl font-semibold overflow-hidden flex items-center gap-3"
-              >
-                <motion.div className="absolute inset-0 bg-gradient-to-r from-primary to-accent bg-[length:200%_100%]"
-                  animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                />
-                <div className="absolute inset-[1px] bg-gradient-to-b from-white/20 to-transparent rounded-2xl" />
-                <Github className="relative z-10 w-5 h-5 text-white" />
-                <span className="relative z-10 text-white">View on GitHub</span>
-                <ArrowUpRight className="relative z-10 w-4 h-4 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </motion.a>
+              <div className="relative glass-card rounded-3xl overflow-hidden border border-border/30 group-hover:border-primary/40 transition-all duration-500 h-full flex flex-col">
+                {/* Image */}
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  <motion.img
+                    src={card.src}
+                    alt={card.label}
+                    className="absolute inset-0 w-full h-full object-cover object-top"
+                    animate={{ scale: hoveredCard === index ? 1.05 : 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-10`} />
+                  <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-card via-card/60 to-transparent" />
+                  <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-card to-transparent" />
 
-              <motion.button
-                onClick={() => setSelectedImage(allScreens[0])}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-8 py-4 glass-card rounded-2xl font-semibold border border-border/50 hover:border-primary/50 transition-colors flex items-center gap-3 text-foreground"
-              >
-                <ImageIcon className="w-5 h-5 text-primary" />
-                All Screens
-              </motion.button>
-            </motion.div>
-          </div>
-
-          {/* ── Right: Phone mockups ── */}
-          <div className="order-1 lg:order-2 flex items-center justify-center">
-            <div className="flex items-end gap-3 md:gap-4">
-              {phoneScreens.map((screen, index) => (
-                <motion.div
-                  key={screen.src}
-                  initial={{ opacity: 0, y: 60 + index * 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.3 + index * 0.15, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-                  whileHover={{ y: -12, scale: 1.04 }}
-                  onClick={() => setSelectedImage(screen.src)}
-                  className="cursor-zoom-in relative"
-                  style={{
-                    marginBottom: index === 1 ? "0px" : index === 0 ? "24px" : "12px",
-                  }}
-                >
-                  {/* Phone frame */}
-                  <div className="relative w-[120px] md:w-[150px] rounded-[28px] border-2 border-white/20 bg-black overflow-hidden shadow-2xl"
-                    style={{ aspectRatio: "9/19.5" }}
+                  {/* Hover overlay */}
+                  <motion.div
+                    className="absolute inset-0 bg-background/60 flex items-center justify-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    {/* Notch */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-b-2xl z-10" />
-                    {/* Screen content */}
-                    <img
-                      src={screen.src}
-                      alt={screen.label}
-                      className="w-full h-full object-cover object-top"
-                    />
-                    {/* Reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none rounded-[26px]" />
-                  </div>
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{
+                        scale: hoveredCard === index ? 1 : 0.8,
+                        opacity: hoveredCard === index ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold flex items-center gap-2 neon-glow text-sm"
+                    >
+                      <ImageIcon className="w-4 h-4" />
+                      View Full
+                    </motion.div>
+                  </motion.div>
+                </div>
 
-                  {/* Label below phone */}
-                  <p className="text-center text-xs text-muted-foreground mt-2 font-medium">
-                    {screen.label}
+                {/* Info */}
+                <div className="p-6 flex flex-col flex-1">
+                  <motion.h3
+                    className="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300"
+                    animate={{ x: hoveredCard === index ? 4 : 0 }}
+                  >
+                    {card.label}
+                  </motion.h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+                    {card.desc}
                   </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-                  {/* Glow under phone */}
-                  <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-3/4 h-8 bg-primary/30 blur-xl rounded-full" />
-                </motion.div>
-              ))}
-            </div>
+        {/* Bottom row — tags + GitHub link */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.6 }}
+          className="flex flex-col sm:flex-row items-center justify-between gap-6 px-2"
+        >
+          <div className="flex flex-wrap gap-2">
+            {["Adobe Photoshop", "Adobe Illustrator", "Figma", "Adobe XD"].map((tool) => (
+              <span key={tool} className="px-4 py-1.5 text-xs font-semibold bg-primary/10 text-primary rounded-lg border border-primary/20">
+                {tool}
+              </span>
+            ))}
           </div>
+
+          <motion.a
+            href="https://github.com/SahilKakadiya2872/UI-UX-Design-Portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="group relative px-8 py-4 rounded-2xl font-semibold overflow-hidden flex items-center gap-3 flex-shrink-0"
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-primary to-accent bg-[length:200%_100%]"
+              animate={{ backgroundPosition: ["0% 0%", "200% 0%"] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            />
+            <div className="absolute inset-[1px] bg-gradient-to-b from-white/20 to-transparent rounded-2xl" />
+            <Github className="relative z-10 w-5 h-5 text-white" />
+            <span className="relative z-10 text-white">View Full Portfolio</span>
+            <ArrowUpRight className="relative z-10 w-4 h-4 text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </motion.a>
         </motion.div>
       </div>
 
-      {/* ── Fullscreen lightbox ── */}
+      {/* Lightbox */}
       <AnimatePresence>
-        {selectedImage !== null && (
+        {lightboxSrc && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-background/90 backdrop-blur-xl"
-            onClick={() => setSelectedImage(null)}
+            onClick={() => setLightboxSrc(null)}
           >
-            {/* All screens grid */}
             <motion.div
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.85, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-              className="relative w-full max-w-5xl"
+              className="relative max-w-4xl w-full glass-card rounded-3xl overflow-hidden border border-primary/30"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex items-center justify-between mb-4">
-                <p className="text-sm font-semibold text-primary uppercase tracking-widest">All Screens</p>
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors px-4 py-2 glass rounded-xl border border-border/30"
-                >
-                  Close ✕
-                </button>
-              </div>
-
-              <div className="grid grid-cols-4 md:grid-cols-4 gap-3">
-                {allScreens.map((src, i) => (
-                  <motion.div
-                    key={src}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="relative rounded-2xl overflow-hidden border border-border/30 hover:border-primary/50 transition-all duration-300 cursor-pointer"
-                    style={{ aspectRatio: "9/16" }}
-                  >
-                    <img src={src} alt={`Screen ${i + 1}`} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors duration-300" />
-                  </motion.div>
-                ))}
-              </div>
+              <img src={lightboxSrc} alt="Full screen" className="w-full h-auto max-h-[85vh] object-contain" />
+              <button
+                onClick={() => setLightboxSrc(null)}
+                className="absolute top-4 right-4 text-xs text-muted-foreground hover:text-foreground px-3 py-1.5 glass rounded-lg border border-border/30"
+              >
+                Close ✕
+              </button>
             </motion.div>
           </motion.div>
         )}

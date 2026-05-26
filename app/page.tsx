@@ -31,112 +31,71 @@ import {
 function CinematicBackground() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {/* Primary Gradient Orbs */}
-      <motion.div
-        animate={{
-          scale: [1, 1.3, 1],
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          rotate: [0, 45, 0],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[-20%] left-[-10%] w-[800px] h-[800px] rounded-full opacity-60"
-        style={{
-          background: "radial-gradient(circle, oklch(0.72 0.22 260 / 0.3) 0%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
-      />
-      <motion.div
-        animate={{
-          scale: [1.2, 1, 1.2],
-          x: [0, -80, 0],
-          y: [0, 80, 0],
-          rotate: [0, -30, 0],
-        }}
-        transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[-20%] right-[-10%] w-[700px] h-[700px] rounded-full opacity-50"
-        style={{
-          background: "radial-gradient(circle, oklch(0.68 0.28 290 / 0.35) 0%, transparent 70%)",
-          filter: "blur(100px)",
-        }}
-      />
-      <motion.div
-        animate={{
-          scale: [1, 1.15, 1],
-          x: [0, 50, 0],
-          y: [0, -40, 0],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        className="absolute top-[40%] right-[20%] w-[500px] h-[500px] rounded-full opacity-40"
-        style={{
-          background: "radial-gradient(circle, oklch(0.85 0.18 195 / 0.25) 0%, transparent 70%)",
-          filter: "blur(90px)",
-        }}
-      />
 
-      {/* Scan Line */}
-      <div className="scanline" />
-
-      {/* Grid Overlay */}
-      <div className="absolute inset-0 grid-pattern opacity-40" />
-      <div className="absolute inset-0 grid-pattern-fine opacity-20" />
+      {/* Static gradient orbs — same visual, zero GPU cost */}
+      <div
+        className="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] rounded-full opacity-30"
+        style={{
+          background: "radial-gradient(circle, oklch(0.72 0.22 260 / 0.4) 0%, transparent 65%)",
+        }}
+      />
+      <div
+        className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full opacity-25"
+        style={{
+          background: "radial-gradient(circle, oklch(0.68 0.28 290 / 0.4) 0%, transparent 65%)",
+        }}
+      />
+      <div
+        className="absolute top-[35%] right-[15%] w-[400px] h-[400px] rounded-full opacity-20"
+        style={{
+          background: "radial-gradient(circle, oklch(0.85 0.18 195 / 0.3) 0%, transparent 65%)",
+        }}
+      />
 
       {/* Vignette */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50 pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/40 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/20 via-transparent to-background/20 pointer-events-none" />
 
-      {/* Corner Accents */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-accent/10 to-transparent" />
+      {/* Corner accents */}
+      <div className="absolute top-0 left-0 w-80 h-80 bg-gradient-to-br from-primary/8 to-transparent" />
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-gradient-to-tl from-accent/8 to-transparent" />
     </div>
   )
 }
 
+
 // Floating Particles
 function FloatingParticles({ count = 50 }: { count?: number }) {
-  const particles = Array.from({ length: count }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: 10 + Math.random() * 20,
-    delay: Math.random() * 10,
-  }))
+  // CSS-only particles — no JS animations, no Framer Motion
+  // Uses transform + opacity only (GPU-composited, near-zero cost)
+  const particles = [
+    { left: "15%", top: "80%", delay: "0s",   duration: "12s", color: "oklch(0.72 0.22 260 / 0.6)" },
+    { left: "40%", top: "90%", delay: "3s",   duration: "16s", color: "oklch(0.68 0.28 290 / 0.5)" },
+    { left: "65%", top: "85%", delay: "6s",   duration: "14s", color: "oklch(0.85 0.18 195 / 0.5)" },
+    { left: "80%", top: "75%", delay: "1.5s", duration: "18s", color: "oklch(0.72 0.22 260 / 0.4)" },
+    { left: "25%", top: "70%", delay: "9s",   duration: "20s", color: "oklch(0.68 0.28 290 / 0.4)" },
+    { left: "55%", top: "95%", delay: "4.5s", duration: "15s", color: "oklch(0.85 0.18 195 / 0.6)" },
+  ]
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {particles.map((particle) => (
-        <motion.div
-          key={particle.id}
-          className="absolute rounded-full"
+      {particles.map((p, i) => (
+        <div
+          key={i}
+          className="absolute w-1 h-1 rounded-full particle-float"
           style={{
-            left: `${particle.x}%`,
-            top: `${particle.y}%`,
-            width: particle.size,
-            height: particle.size,
-            background: particle.id % 3 === 0 
-              ? "oklch(0.72 0.22 260)" 
-              : particle.id % 3 === 1 
-                ? "oklch(0.68 0.28 290)" 
-                : "oklch(0.85 0.18 195)",
-          }}
-          animate={{
-            y: [0, -200, 0],
-            x: [0, Math.random() * 40 - 20, 0],
-            opacity: [0, 0.8, 0],
-            scale: [0.5, 1, 0.5],
-          }}
-          transition={{
-            duration: particle.duration,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: "easeInOut",
+            left: p.left,
+            top: p.top,
+            background: p.color,
+            animationDelay: p.delay,
+            animationDuration: p.duration,
           }}
         />
       ))}
     </div>
   )
 }
+
 
 // Navigation Component
 function Navigation() {
@@ -1729,7 +1688,7 @@ export default function Portfolio() {
   return (
     <main className="relative noise vignette">
       <CinematicBackground />
-      <FloatingParticles count={40} />
+      <FloatingParticles count={6} />
       <Navigation />
       <HeroSection />
       <div className="section-divider" />

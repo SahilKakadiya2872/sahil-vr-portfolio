@@ -123,3 +123,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes particleFloat {
+  0%   { transform: translateY(0px) translateX(0px); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(-180px) translateX(15px); opacity: 0; }
+}
+
+.particle-float {
+  animation: particleFloat linear infinite;
+  will-change: transform, opacity;
+}

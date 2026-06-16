@@ -747,7 +747,7 @@ function ProjectsSection() {
     },
     {
       title: "Ninja Survival: 3D Game",
-      description: "Third-person 3D survival game set in a dark forest environment, featuring a controllable ninja character, AI-driven enemy dinosaurs with randomised animation behaviours, and realistic terrain built with Unity Terrain Tools and Blender.",
+      description: "Third-person 3D survival prototype set in a forest environment, featuring a player-controlled ninja character with run and jump movement, dinosaur NPCs that play randomized Mixamo animations, and terrain built with Unity Terrain Tools and Blender.",
       tags: ["Unity", "C#", "Blender", "Mixamo", "Terrain Tools"],
       gradient: "from-neon-cyan via-accent to-primary",
       link: "https://github.com/SahilKakadiya2872/Ninja-Survival",

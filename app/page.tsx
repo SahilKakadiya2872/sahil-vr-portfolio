@@ -418,8 +418,8 @@ function HeroSection() {
           </motion.a>
           
           <motion.a
-            href="https://drive.google.com/uc?export=download&id=1f51Rau4PI9iRizVq10aUAz2qjChNLjHC"
-            download
+            href="/Sahil_Kakadiya_CV.pdf"
+            download="Sahil_Kakadiya_CV.pdf"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
             className="group relative px-10 py-5 glass-card rounded-2xl font-semibold text-lg overflow-hidden border border-border/50 hover:border-primary/50 transition-colors"
